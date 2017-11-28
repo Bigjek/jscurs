@@ -60,7 +60,7 @@ function hasProperty(obj, prop) {
  */
 function getEnumProps(obj) {
     var arr = [];
-    for( var prop in obj){
+    for(var prop in obj){
         arr.push(prop);
     }
     return arr;
@@ -72,7 +72,7 @@ function getEnumProps(obj) {
  */
 function upperProps(obj) {
     var arr = [];
-    for( var prop in obj){
+    for(var prop in obj){
         arr.push(prop.toUpperCase());
     }
     return arr;
@@ -83,14 +83,13 @@ function upperProps(obj) {
  Напишите аналог встроенного метода slice для работы с массивами
  */
 function slice(array, from, to) {
-
     var arr = [], arrLength = array.length, fromStart = from || 0, toEnd = (to || to === 0) ? to : arrLength;
-    if(fromStart > 0) {
-        fromStart
+    if (fromStart > 0) {
+        fromStart = fromStart;
     }else {
         fromStart = (arrLength + from) > 0 ? fromStart : 0;
     }
-    if(toEnd < 0) {
+    if (toEnd < 0) {
         toEnd = arrLength + to ;
     }
     if (toEnd > arrLength) {
@@ -108,7 +107,6 @@ function slice(array, from, to) {
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
 function createProxy(obj) {
-    obj = {};
     return new Proxy(obj, {
         get(target, prop){
             return target[prop]*target[prop];
