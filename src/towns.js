@@ -81,9 +81,7 @@ filterInput.addEventListener('keyup', function() {
     function search(){
         loadTowns()
         .then((e) => {
-
             filterResult.innerHTML = '';
-
             if (value) {
                 e.forEach( function (elem) {
                     if(isMatching(elem.name, value)){
@@ -91,26 +89,19 @@ filterInput.addEventListener('keyup', function() {
                     }
                 });
             }
-
             if(!value){
                 created('Нет данных', filterResult);
             }
         })
         .catch(() => {
-
             filterResult.innerHTML = '';
-
-            createDiv('Загрузка неудалась',filterResult);
-
+            created('Загрузка неудалась', filterResult);
             let myBtn = document.createElement('button');
             myBtn.textContent = 'Reload';
-
             filterResult.appendChild(myBtn);
-
             myBtn.addEventListener('click', function() {
                 filterInput.dispatchEvent(new Event("keyup"));
             })
-
         });
     }
 
