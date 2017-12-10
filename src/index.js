@@ -30,15 +30,16 @@ function loadAndSortTowns() {
         });
         return arr;
     }
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest(), city;
+    const result =  new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
         xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
         xhr.send();
         xhr.addEventListener('load', () => {
-            city = JSON.parse(xhr.response);
+            let city = JSON.parse(xhr.response);
             resolve(mySort(city));
         });
     });
+    return result;
 }
 
 export {

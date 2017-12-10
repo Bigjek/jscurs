@@ -1,3 +1,4 @@
+import { loadAndSortTowns } from './index';
 /**
  * ДЗ 6.2 - Создать страницу с текстовым полем для фильтрации городов
  *
@@ -36,6 +37,7 @@ let homeworkContainer = document.querySelector('#homework-container');
  * @return {Promise<Array<{name: string}>>}
  */
 function loadTowns() {
+    return loadAndSortTowns();
 }
 
 /**
@@ -52,6 +54,7 @@ function loadTowns() {
  * @return {boolean}
  */
 function isMatching(full, chunk) {
+    return (full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1) ? true : false;
 }
 
 let loadingBlock = homeworkContainer.querySelector('#loading-block');
@@ -60,7 +63,68 @@ let filterInput = homeworkContainer.querySelector('#filter-input');
 let filterResult = homeworkContainer.querySelector('#filter-result');
 let townsPromise;
 
+window.addEventListener('load', () => {
+    loadingBlock.style.display = 'none';
+    filterBlock.style.display = 'block';
+});
+
+function created(name, block) {
+    let div = document.createElement('div');
+    div.textContent = name;
+    block.appendChild(div);
+}
+
 filterInput.addEventListener('keyup', function() {
+
+    let value = filterInput.value.trim();
+
+    function search(){
+        loadTowns()
+        .then((e) => {
+
+            filterResult.innerHTML = '';
+
+            if (value) {
+                e.forEach( function (elem) {
+                    if(isMatching(elem.name, value)){
+                        created(elem.name, filterResult)
+                    }
+                });
+            }
+
+            if(!value){
+                created('Нет данных', filterResult);
+            }
+        })
+        .catch(() => {
+
+            filterResult.innerHTML = '';
+
+            createDiv('Загрузка неудалась',filterResult);
+
+            let myBtn = document.createElement('button');
+            myBtn.textContent = 'Reload';
+
+            filterResult.appendChild(myBtn);
+
+            myBtn.addEventListener('click', function() {
+                filterInput.dispatchEvent(new Event("keyup"));
+            })
+
+        });
+    }
+
+    if (value) {
+        filterResult.innerHTML ='Загрузка...';
+        search();
+    }else{
+        filterResult.innerHTML ='';
+    }
+    
+
+
+
+
 });
 
 export {
