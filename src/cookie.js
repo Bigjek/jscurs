@@ -1,3 +1,4 @@
+import { createCookie, deleteCookie } from './index';
 /**
  * ДЗ 7.2 - Создать редактор cookie с возможностью фильтрации
  *
@@ -40,7 +41,40 @@ let addButton = homeworkContainer.querySelector('#add-button');
 let listTable = homeworkContainer.querySelector('#list-table tbody');
 
 filterNameInput.addEventListener('keyup', function() {
+    cookieSort(getCookies(), filterNameInput.value)
 });
 
 addButton.addEventListener('click', () => {
+    createCookie(addNameInput.value.trim(), addValueInput.value.trim());
+    cookieSort(getCookies(), filterNameInput.value);
 });
+
+function filterArr(elem, filter) {
+    return elem.includes(filter);
+}
+
+function createItem(table, name, value){
+    let item = '<tr><td>' + name + '</td><td>'+ value +'</td><td><button id="'+ name +'">Удалить</button></td></tr>';
+    return item;
+}
+
+function cookieSort(cookies, filter){
+    listTable.innerHTML = "";
+    
+    for(let elem in cookies){
+        if (filterArr(elem, filter) || filterArr(cookies[elem], filter)) {
+            let name = `${elem}`, value = `${cookies[elem]}`;
+            listTable.insertAdjacentHTML('beforeend', createItem(listTable, name, value));
+            listTable.querySelector('#' + name).addEventListener('click', () => {
+                deleteCookie(elem);
+                cookieSort(getCookies(), filterNameInput.value);
+            })
+        }
+    }
+};
+
+function getCookies() {
+    return document.cookie
+        .split('; ').filter(Boolean).map(cookie => cookie.match(/^([^=]+)=(.+)/))
+        .reduce((e, [, name, value]) => { e[name] = value; return e;}, {});
+}
